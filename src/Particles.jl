@@ -1,7 +1,7 @@
 
-abstract type AbstractDEMParticle{T<:AbstractFloat} end
+abstract type AbstractDEMParticle{T <: AbstractFloat} end
 
-struct DEMParticle{T<:AbstractFloat} <: AbstractDEMParticle{T}
+struct DEMParticles{T <: AbstractFloat} <: AbstractDEMParticle{T}
     id::Vector{Int}
     type::Vector{Int}
     𝐱::Matrix{T}
@@ -11,12 +11,15 @@ struct DEMParticle{T<:AbstractFloat} <: AbstractDEMParticle{T}
     m::Vector{T}
     Π::Vector{T}
     r::Vector{T}
+    _permutation::Vector{Int}
+    _cell_id::Vector{Int}
+    _sorted::Bool
 end
 
-struct ParticleCell{D,T<:AbstractFloat}
-    𝐥::SVector{D,T}
-    𝐱_min::SVector{D,T}
-    𝐱_max::SVector{D,T}
-    min_id::Array{Int,D}
-    max_id::Array{Int,D}
+struct ParticleCellList{D, T <: AbstractFloat}
+    𝐥::SVector{D, T}
+    𝐱_min::SVector{D, T}
+    𝐱_max::SVector{D, T}
+    min_id::Array{Int, D}
+    max_id::Array{Int, D}
 end
