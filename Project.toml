@@ -3,6 +3,9 @@ uuid = "5f70cd00-76e9-437f-b2da-e3077bcaf3c8"
 authors = ["Queue_sys <29653819+Quesys-tech@users.noreply.github.com> and contributors"]
 version = "0.1.0"
 
+[deps]
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
+
 [compat]
 julia = "1.10"
 
