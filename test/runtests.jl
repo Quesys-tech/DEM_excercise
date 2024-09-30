@@ -1,6 +1,5 @@
 using DEM_excercise
 using Test
+using TestItemRunner
 
-@testset "DEM_excercise.jl" begin
-    # Write your tests here.
-end
+@run_package_tests verbose = true
