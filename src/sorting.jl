@@ -11,8 +11,8 @@ function sort!(p::DEMParticles{T}, cell::ParticleCellList{D, T}) where {D, T}
     end
     sortperm!(p._permutation, p._cell_id)
     # apply permutation to particles
-    p.id = p.id[p._permutation]
-    p.type = p.type[p._permutation]
+    p.id .= p.id[p._permutation]
+    p.type .= p.type[p._permutation]
     p.𝐱 .= p.𝐱[:, p._permutation]
     p.𝐮 .= p.𝐮[:, p._permutation]
     p.𝛚 .= p.𝛚[:, p._permutation]
