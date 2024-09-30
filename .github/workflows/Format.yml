@@ -1,0 +1,31 @@
+name: Format suggestions
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/cache@v2
+      - name: Install JuliaFormatter and format
+        run: |
+          julia  -e 'import Pkg; Pkg.add("JuliaFormatter")'
+          julia  -e 'using JuliaFormatter; format(".")'
+      # https://github.com/marketplace/actions/create-pull-request
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Format .jl files
+          title: 'Automatic JuliaFormatter.jl run'
+          branch: automated_pr/JuliaFormatter
+          delete-branch: true
+          labels: formatting, automated_pr, no_changelog
+      - name: Check outputs
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
