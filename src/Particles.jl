@@ -1,16 +1,31 @@
 
 abstract type AbstractDEMParticle{T <: AbstractFloat} end
+"""
+    DEMParticles{T <: AbstractFloat}
 
+A struct to store the information of the particles in the DEM simulation.
+
+# Fields
+- `id::Vector{Int}`: The id of the particles.
+- `type::Vector{Int}`: The type of the particles.
+- `𝛉::Matrix{T}`: The rotation matrix of the particles. size: 3xN
+- `m::Vector{T}`: The mass of the particles.
+- `Π::Vector{T}`: The inertia of the particles.
+- `r::Vector{T}`: The radius of the particles.
+- `𝐱::Matrix{T}`: The position of the particles. size: 3xN
+- `𝐮::Matrix{T}`: The velocity of the particles. size: 3xN
+- `𝛚::Matrix{T}`: The angular velocity of the particles. size: 3xN
+"""
 struct DEMParticles{T <: AbstractFloat} <: AbstractDEMParticle{T}
     id::Vector{Int}
     type::Vector{Int}
-    𝐱::Matrix{T}
-    𝐮::Matrix{T}
-    𝛚::Matrix{T}
     𝛉::Matrix{T}
     m::Vector{T}
     Π::Vector{T}
     r::Vector{T}
+    𝐱::Matrix{T}
+    𝐮::Matrix{T}
+    𝛚::Matrix{T}
     _permutation::Vector{Int}
     _cell_id::Vector{Int}
     _sorted::Bool
