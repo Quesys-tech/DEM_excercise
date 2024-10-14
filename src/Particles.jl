@@ -65,11 +65,14 @@ struct ParticleCellList{D, T}
     𝐱_max::SVector{D, T}
     min_id::Array{Int, D}
     max_id::Array{Int, D}
-    function ParticleCellList(h::T, 𝐱_min::SVector{D, T}, 𝐱_max::SVector{D, T}) where {D, T}
+    function ParticleCellList(
+            h::T, 𝐱_min::AbstractVector{T}, 𝐱_max::AbstractVector{T}) where {T}
+        @assert length(𝐱_min) == length(𝐱_max)
+        D = length(𝐱_min)
         num_cell_dim = @. ceil(Int, (𝐱_max - 𝐱_min) / h)
         min_id = zeros(Int, num_cell_dim...)
         max_id = zeros(Int, num_cell_dim...)
-        new{D, T}(h, 𝐱_min, 𝐱_max, min_id, max_id)
+        new{D, T}(h, SVector{D}(𝐱_min), SVector{D}(𝐱_max), min_id, max_id)
     end
 end
 
