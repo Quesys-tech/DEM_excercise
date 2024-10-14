@@ -25,6 +25,11 @@ function sort!(p::DEMParticles{T}, cell::ParticleCellList{D, T}) where {D, T}
 
     return p
 end
+@testitem "sort!" begin
+    using LinearAlgebra
+    import DEM_excercise: DEMParticles, ParticleCellList, sort!
+    
+end
 
 function update!(cl::ParticleCellList{D, T}, p::DEMParticles{T}) where {D, T}
     cl.min_id .= typemax(typeof(cl.min_id))
