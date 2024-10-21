@@ -28,12 +28,16 @@ end
 @testitem "sort!" begin
     using LinearAlgebra
     import DEM_excercise: DEMParticles, CellList, sort!
-    
+
     𝐱 = [7.4 6.9 7.4 0.8 1.0 5.4 9.5 0.1 4.4 3.5
          3.8 9.9 2.1 1.4 0.4 6.6 2.7 1.4 6.2 0.3
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0]
-    p = DEMParticles(type, rand(10), rand(10), rand(10).*2, 𝐱, 𝛉, 𝐮, 𝛚)
-    sort!(p, cl)
+    N = size(𝐱, 2)
+    type = ones(Int, N)
+    𝛉 = zero(𝐱)
+    𝐮 = zero(𝐱)
+    𝛚 = zero(𝐱)
+    p = DEMParticles(type, rand(N), rand(N), rand(N) .* 2, 𝐱, 𝛉, 𝐮, 𝛚)
 end
 
 function update!(cl::CellList{D, T}, p::DEMParticles{T}) where {D, T}
