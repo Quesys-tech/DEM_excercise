@@ -1,13 +1,13 @@
 function cell_id(𝐱ᵢ, cl::CellList{D, T}) where {D, T}
-    cell_id = @. floor(Int, (𝐱ᵢ - cl.𝐱_min) / cl.𝐥) + 1
+    cell_id = @. floor(Int, (𝐱ᵢ - cl.bc.𝐱_min) / cl.h) + 1
     cartesian = CartesianIndex(cell_id...)
-    linear = LinearIndices(cl.max_id)[cartesian]
+    linear = LinearIndices(cl.id_max)[cartesian]
     return linear
 end
 
-function sort!(p::DEMParticles{T}, cell::CellList{D, T}) where {D, T}
-    for i in eachindex(p)
-        p[i]._cell_id = cell_id(p[i].𝐱, cell)
+function sort!(p::DEMParticles{T}, cell::CellList{BC, D, T}) where {BC, D, T}
+    for i in 1:length(p)
+        p._cell_id[i] = cell_id(p.𝐱[:, i], cell)
     end
     sortperm!(p._permutation, p._cell_id)
     # apply permutation to particles
@@ -17,12 +17,11 @@ function sort!(p::DEMParticles{T}, cell::CellList{D, T}) where {D, T}
     p.𝐮 .= p.𝐮[:, p._permutation]
     p.𝛚 .= p.𝛚[:, p._permutation]
     p.𝛉 .= p.𝛉[:, p._permutation]
-    p.m = p.m[p._permutation]
-    p.Π = p.Π[p._permutation]
-    p.r = p.r[p._permutation]
-    p._cell_id = p._cell_id[p._permutation]
+    p.m .= p.m[p._permutation]
+    p.Π .= p.Π[p._permutation]
+    p.r .= p.r[p._permutation]
+    p._cell_id .= p._cell_id[p._permutation]
     p._sorted = true
-
     return p
 end
 @testitem "sort!" begin
@@ -38,13 +37,48 @@ end
     𝐮 = zero(𝐱)
     𝛚 = zero(𝐱)
     p = DEMParticles(type, rand(N), rand(N), rand(N) .* 2, 𝐱, 𝛉, 𝐮, 𝛚)
+    bc = NoneBoundaryCondition([0.0, 0.0, 0.0], [10.0, 10.0, 10.0])
+    cl = CellList(2.0, bc)
+    sort!(p, cl)
+    @test p.𝐱[:, 1] == [0.8, 1.4, 0]
+    @test p.𝐱[:, 10] == [6.9, 9.9, 0]
 end
 
-function update!(cl::CellList{D, T}, p::DEMParticles{T}) where {D, T}
-    cl.min_id .= typemax(typeof(cl.min_id))
-    cl.max_id .= typemin(typeof(cl.max_id))
-    for i in eachindex(p)
-        cl.min_id[p._cell_id[i]] = min(cl.min_id[p._cell_id[i]], i)
-        cl.max_id[p._cell_id[i]] = max(cl.max_id[p._cell_id[i]], i)
+function update!(cl::CellList{BC, D, T}, p::DEMParticles{T}) where {BC, D, T}
+    sort!(p, cl)
+    cl.id_min .= typemax(eltype(cl.id_min))
+    cl.id_max .= typemin(eltype(cl.id_max))
+    for i in 1:length(p)
+        cl.id_min[p._cell_id[i]] = min(cl.id_min[p._cell_id[i]], i)
+        cl.id_max[p._cell_id[i]] = max(cl.id_max[p._cell_id[i]], i)
     end
+    for i in eachindex(cl.id_min)
+        if cl.id_min[i] == typemax(eltype(cl.id_min))
+            cl.id_min[i] = -1
+            cl.id_max[i] = -1
+        end
+    end
+end
+@testitem "update!" begin
+    using LinearAlgebra
+    import DEM_excercise: DEMParticles, CellList, sort!, update!
+
+    𝐱 = [7.4 6.9 7.4 0.8 1.0 5.4 9.5 0.1 4.4 3.5
+         3.8 9.9 2.1 1.4 0.4 6.6 2.7 1.4 6.2 0.3
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0]
+    N = size(𝐱, 2)
+    type = ones(Int, N)
+    𝛉 = zero(𝐱)
+    𝐮 = zero(𝐱)
+    𝛚 = zero(𝐱)
+    p = DEMParticles(type, rand(N), rand(N), rand(N) .* 2, 𝐱, 𝛉, 𝐮, 𝛚)
+    bc = NoneBoundaryCondition([0.0, 0.0, 0.0], [10.0, 10.0, 10.0])
+    cl = CellList(2.0, bc)
+    update!(cl, p)
+    @test cl.id_min[1, 1, 1] == 1
+    @test cl.id_max[1, 1, 1] == 3
+    @test cl.id_min[2,1,1] == 4
+    @test cl.id_max[2,1,1] == 4
+    @test cl.id_min[3,1,1] == -1
+    @test cl.id_min[3,1,1] == -1
 end

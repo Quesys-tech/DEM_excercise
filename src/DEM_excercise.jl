@@ -10,4 +10,5 @@ include("CellList.jl")
 export PeriodicBoundaryCondition, NoneBoundaryCondition, CellList
 include("System.jl")
 include("sorting.jl")
+export update!
 end
