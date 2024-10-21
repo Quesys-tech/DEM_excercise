@@ -43,16 +43,15 @@ struct CellList{BC, D, T} <: AbstractCellList{BC, D, T}
         num_cell_dim = @. ceil(Int, (bc.𝐱_max - bc.𝐱_min) / h)
         id_min = zeros(Int, num_cell_dim...)
         id_max = zeros(Int, num_cell_dim...)
-        new{D, T, BC}(h, bc, id_min, id_max)
+        new{BC,D,T}(h, bc, id_min, id_max)
     end
 end
 
 @testitem "CellList" begin
     using StaticArrays
+    bc = PeriodicBoundaryCondition([0.0, 0.0], [1.0, 1.0])
     cl = CellList(0.1, bc)
     @test cl.h == 0.1
-    @test cl.𝐱_min == SVector(0.0, 0.0)
-    @test cl.𝐱_max == SVector(1.0, 1.0)
     @test cl.id_min == zeros(Int, 10, 10)
     @test cl.id_max == zeros(Int, 10, 10)
 end
