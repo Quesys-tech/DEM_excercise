@@ -58,30 +58,3 @@ end
     p = DEMParticles(type, m, Π, r, 𝐱, 𝛉, 𝐮, 𝛚)
     @test p.id == collect(1:10)
 end
-
-struct ParticleCellList{D, T}
-    h::T
-    𝐱_min::SVector{D, T}
-    𝐱_max::SVector{D, T}
-    min_id::Array{Int, D}
-    max_id::Array{Int, D}
-    function ParticleCellList(
-            h::T, 𝐱_min::AbstractVector{T}, 𝐱_max::AbstractVector{T}) where {T}
-        @assert length(𝐱_min) == length(𝐱_max)
-        D = length(𝐱_min)
-        num_cell_dim = @. ceil(Int, (𝐱_max - 𝐱_min) / h)
-        min_id = zeros(Int, num_cell_dim...)
-        max_id = zeros(Int, num_cell_dim...)
-        new{D, T}(h, SVector{D}(𝐱_min), SVector{D}(𝐱_max), min_id, max_id)
-    end
-end
-
-@testitem "ParticleCellList" begin
-    using StaticArrays
-    cl = ParticleCellList(0.1, SVector(0.0, 0.0), SVector(1.0, 1.0))
-    @test cl.h == 0.1
-    @test cl.𝐱_min == SVector(0.0, 0.0)
-    @test cl.𝐱_max == SVector(1.0, 1.0)
-    @test cl.min_id == zeros(Int, 10, 10)
-    @test cl.max_id == zeros(Int, 10, 10)
-end

@@ -1,4 +1,4 @@
-function cell_id(𝐱ᵢ, cl::ParticleCellList{D, T}) where {D, T}
+function cell_id(𝐱ᵢ, cl::CellList{D, T}) where {D, T}
     cell_id = @. floor(Int, (𝐱ᵢ - cl.𝐱_min) / cl.𝐥) + 1
     cartesian = CartesianIndex(cell_id...)
     linear = LinearIndices(cl.max_id)[cartesian]
@@ -27,11 +27,11 @@ function sort!(p::DEMParticles{T}, cell::ParticleCellList{D, T}) where {D, T}
 end
 @testitem "sort!" begin
     using LinearAlgebra
-    import DEM_excercise: DEMParticles, ParticleCellList, sort!
+    import DEM_excercise: DEMParticles, CellList, sort!
     
 end
 
-function update!(cl::ParticleCellList{D, T}, p::DEMParticles{T}) where {D, T}
+function update!(cl::CellList{D, T}, p::DEMParticles{T}) where {D, T}
     cl.min_id .= typemax(typeof(cl.min_id))
     cl.max_id .= typemin(typeof(cl.max_id))
     for i in eachindex(p)
