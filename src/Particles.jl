@@ -44,6 +44,14 @@ mutable struct DEMParticles{T <: AbstractFloat} <: AbstractDEMParticles{T}
         new{T}(id, type, m, Π, r, 𝐱, 𝛉, 𝐮, 𝛚, _permutation, _cell_id, _sorted)
     end
 end
+function Base.length(p::DEMParticles)
+    N = length(p.id)
+    @assert length(p.type) == length(p.m) == length(p.Π) == length(p.r) == N
+    @assert size(p.𝐱, 2) == size(p.𝛉, 2) == size(p.𝐮, 2) == size(p.𝛚, 2) == N
+    @assert length(p._permutation) == length(p._cell_id) == N
+
+    Base.length(p.id)
+end
 @testitem "DEMParticles" begin
     type = ones(Int, 10)
     m = rand(10)
@@ -57,4 +65,5 @@ end
     𝛚 = zero(𝐱)
     p = DEMParticles(type, m, Π, r, 𝐱, 𝛉, 𝐮, 𝛚)
     @test p.id == collect(1:10)
+    @test length(p) == 10
 end
