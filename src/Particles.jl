@@ -1,5 +1,5 @@
 
-abstract type AbstractDEMParticle{T <: AbstractFloat} end
+abstract type AbstractDEMParticles{T <: AbstractFloat} end
 """
     DEMParticles{T <: AbstractFloat}
 
@@ -16,7 +16,7 @@ A struct to store the information of the particles in the DEM simulation.
 - `𝐮::Matrix{T}`: The velocity of the particles. size: 3xN
 - `𝛚::Matrix{T}`: The angular velocity of the particles. size: 3xN
 """
-struct DEMParticles{T <: AbstractFloat} <: AbstractDEMParticle{T}
+mutable struct DEMParticles{T <: AbstractFloat} <: AbstractDEMParticles{T}
     id::Vector{Int}
     type::Vector{Int}
     m::Vector{T}
