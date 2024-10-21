@@ -5,7 +5,7 @@ function cell_id(𝐱ᵢ, cl::CellList{D, T}) where {D, T}
     return linear
 end
 
-function sort!(p::DEMParticles{T}, cell::ParticleCellList{D, T}) where {D, T}
+function sort!(p::DEMParticles{T}, cell::CellList{D, T}) where {D, T}
     for i in eachindex(p)
         p[i]._cell_id = cell_id(p[i].𝐱, cell)
     end
@@ -29,6 +29,11 @@ end
     using LinearAlgebra
     import DEM_excercise: DEMParticles, CellList, sort!
     
+    𝐱 = [7.4 6.9 7.4 0.8 1.0 5.4 9.5 0.1 4.4 3.5
+         3.8 9.9 2.1 1.4 0.4 6.6 2.7 1.4 6.2 0.3
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0]
+    p = DEMParticles(type, rand(10), rand(10), rand(10).*2, 𝐱, 𝛉, 𝐮, 𝛚)
+    sort!(p, cl)
 end
 
 function update!(cl::CellList{D, T}, p::DEMParticles{T}) where {D, T}

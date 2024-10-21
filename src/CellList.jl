@@ -21,16 +21,18 @@ struct NoneBoundaryCondition{D, T} <: AbstractBoundaryCondition{D, T}
     end
 end
 
-struct CellList{BC <: AbstractBoundaryCondition, D, T}
+abstract type AbstractCellList{BC <: AbstractBoundaryCondition{D, T}, D, T} end
+struct CellList{BC, D, T} <: AbstractCellList{BC, D, T}
     h::T
-    bc::BC{D, T}
+    bc::BC
     id_min::Array{Int, D}
     id_max::Array{Int, D}
-    function CellList(h::T, bc::AbstractBoundaryCondition{D, T}) where {D, T}
+    function CellList(
+            h::T, bc::BC) where {BC <: AbstractBoundaryCondition{D, T}} where {D, T}
         num_cell_dim = @. ceil(Int, (bc.𝐱_max - bc.𝐱_min) / h)
         id_min = zeros(Int, num_cell_dim...)
         id_max = zeros(Int, num_cell_dim...)
-        new{D, T}(h, bc, id_min, id_max)
+        new{D, T, BC}(h, bc, id_min, id_max)
     end
 end
 
