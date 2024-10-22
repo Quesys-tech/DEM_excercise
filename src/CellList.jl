@@ -43,7 +43,7 @@ struct CellList{BC, D, T} <: AbstractCellList{BC, D, T}
         num_cell_dim = @. ceil(Int, (bc.𝐱_max - bc.𝐱_min) / h)
         id_min = zeros(Int, num_cell_dim...)
         id_max = zeros(Int, num_cell_dim...)
-        new{BC,D,T}(h, bc, id_min, id_max)
+        new{BC, D, T}(h, bc, id_min, id_max)
     end
 end
 
