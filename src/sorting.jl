@@ -77,8 +77,8 @@ end
     update!(cl, p)
     @test cl.id_min[1, 1, 1] == 1
     @test cl.id_max[1, 1, 1] == 3
-    @test cl.id_min[2,1,1] == 4
-    @test cl.id_max[2,1,1] == 4
-    @test cl.id_min[3,1,1] == -1
-    @test cl.id_min[3,1,1] == -1
+    @test cl.id_min[2, 1, 1] == 4
+    @test cl.id_max[2, 1, 1] == 4
+    @test cl.id_min[3, 1, 1] == -1
+    @test cl.id_min[3, 1, 1] == -1
 end
