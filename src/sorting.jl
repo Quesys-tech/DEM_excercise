@@ -46,18 +46,19 @@ end
 
 function update!(cl::CellList{BC, D, T}, p::DEMParticles{T}) where {BC, D, T}
     sort!(p, cl)
-    cl.id_min .= typemax(eltype(cl.id_min))
-    cl.id_max .= typemin(eltype(cl.id_max))
-    for i in 1:length(p)
-        cl.id_min[p._cell_id[i]] = min(cl.id_min[p._cell_id[i]], i)
-        cl.id_max[p._cell_id[i]] = max(cl.id_max[p._cell_id[i]], i)
+    cl.id_min .= -1
+    cl.id_max .= -1
+
+    cl.id_min[p._cell_id[1]] = 1
+    for i in (1 + 1):(length(p) - 1)
+        ibl = p._cell_id[i - 1]
+        ibi = p._cell_id[i]
+        ibr = p._cell_id[i + 1]
+
+        ibl < ibi && (cl.id_min[ibi] = i)
+        ibr > ibi && (cl.id_max[ibi] = i)
     end
-    for i in eachindex(cl.id_min)
-        if cl.id_min[i] == typemax(eltype(cl.id_min))
-            cl.id_min[i] = -1
-            cl.id_max[i] = -1
-        end
-    end
+    cl.id_min[p._cell_id[length(p)]] = length(p)
 end
 @testitem "update!" begin
     using LinearAlgebra
