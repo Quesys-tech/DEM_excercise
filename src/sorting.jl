@@ -6,7 +6,7 @@ function cell_id(𝐱ᵢ, cl::CellList{D, T}) where {D, T}
 end
 
 function sort!(p::DEMParticles{T}, cell::CellList{BC, D, T}) where {BC, D, T}
-    for i in 1:length(p)
+    Threads.@threads for i in 1:length(p)
         p._cell_id[i] = cell_id(p.𝐱[:, i], cell)
     end
     sortperm!(p._permutation, p._cell_id)
@@ -50,7 +50,7 @@ function update!(cl::CellList{BC, D, T}, p::DEMParticles{T}) where {BC, D, T}
     cl.id_max .= -1
 
     cl.id_min[p._cell_id[1]] = 1
-    for i in (1 + 1):(length(p) - 1)
+    Threads.@threads for i in (1 + 1):(length(p) - 1)
         ibl = p._cell_id[i - 1]
         ibi = p._cell_id[i]
         ibr = p._cell_id[i + 1]
