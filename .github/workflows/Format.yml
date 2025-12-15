@@ -17,7 +17,7 @@ jobs:
       # https://github.com/marketplace/actions/create-pull-request
       - name: Create Pull Request
         id: cpr
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: Format .jl files
