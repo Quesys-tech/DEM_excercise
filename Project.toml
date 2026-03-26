@@ -1,16 +1,18 @@
 name = "DEM_excercise"
 uuid = "5f70cd00-76e9-437f-b2da-e3077bcaf3c8"
-authors = ["Queue_sys <29653819+Quesys-tech@users.noreply.github.com> and contributors"]
 version = "0.1.0"
+authors = ["Queue_sys <29653819+Quesys-tech@users.noreply.github.com> and contributors"]
 
 [deps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 TestItems = "1c621080-faea-4a02-84b6-bbd5e436b8fe"
+Tullio = "bc48ee85-29a4-5162-ae0b-a64e1601d4bc"
 
 [compat]
-TestItems = "1"
 StaticArrays = "1"
+TestItems = "1"
+Tullio = "0.3.9"
 julia = "1.10"
 
 [extras]
